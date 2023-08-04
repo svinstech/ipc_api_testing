@@ -150,7 +150,7 @@ describe("[CM-729] - Jurisdictions - 1 jurisdiction per state.", () => {
         JURISDICTION_DATA = await HitEndpoint(Urls.Dev, Endpoints.Jurisdictions) as Jurisdiction[];
     });
 
-    it.only("Verify that there is exactly 1 jurisdiction per state.", () => {
+    it("Verify that there is exactly 1 jurisdiction per state.", () => {
         // Get list of unique ipc jurisdictions
         const ipcJurisdictionUniqueNames:string[] = JURISDICTION_DATA.map((entry) => {
             return entry.unique_name.replace("US-","")
@@ -182,3 +182,25 @@ describe("[CM-729] - Jurisdictions - 1 jurisdiction per state.", () => {
     })
 })
 
+describe("[CM-730] - Jurisdictions - 1 jurisdiction per state.", () => {
+    before("Get the test data.", async () => {
+        PA_SHIM_STATES_DATA = await GetPaShimUsStateData();
+        PRODUCT_LINE_DATA = await HitEndpoint(Urls.Dev, Endpoints.ProductLines) as ProductLine[];
+    });
+
+    it("Verify that the IPC products match the pa_shim products.", () => {
+        const productLineUniqueNames:string[] = PRODUCT_LINE_DATA.map((entry) => {return entry.unique_name})
+        const paShimProducts:string[] = Object.values(PA_SHIM_STATES_DATA as Object).map((entry) => {return entry.products}).flat()
+        const paShimProductsUniqueNames:string[] = [...new Set(paShimProducts)]
+
+        console.log("productLineUniqueNames")
+        console.log(productLineUniqueNames)
+        console.log("paShimProductsUniqueNames")
+        console.log(paShimProductsUniqueNames)
+
+        // If the difference between the arrays is 0, then they contain an identical set of jurisdictions.
+        const productArrayDifference:string[] = productLineUniqueNames.filter((product) => !paShimProductsUniqueNames.includes(product));
+
+        expect(productArrayDifference.length).to.equal(0)
+    })
+})
