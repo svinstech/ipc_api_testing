@@ -33,9 +33,6 @@ export async function GetPaShimUsStateData() :Promise<UsStateMapping|undefined> 
             writeFileSync(paShimUsStatesJsonFileName, JSON.stringify(jsonifiedYaml, null, 2));
 
             paShimUsStatesData = jsonifiedYaml.default; // NOTICE: I'm targeting default here.
-
-            //testing
-            // console.log(paShimUsStatesData)
         })
     }
 
