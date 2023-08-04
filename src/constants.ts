@@ -1,10 +1,10 @@
 
 
 export enum Urls {
-    Dev = "https://ipim.vouch-dev.us",
-    Stg = "https://ipim.vouch-stg.us",
-    Uat = "https://ipim.vouch-uat.us",
-    Prod = "https://ipim.vouch.us"
+    Dev = "https://insurance-products-core.vouch-dev.us",
+    Stg = "https://insurance-products-core.vouch-stg.us",
+    Uat = "https://insurance-products-core.vouch-uat.us",
+    Prod = "https://insurance-products-core.vouch.us"
 }
 
 export enum Endpoints {
