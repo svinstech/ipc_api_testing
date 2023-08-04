@@ -22,7 +22,7 @@ async function main() :Promise<void> {
     // console.log(productLineData);
 
 
-    const paShimUsStatesData:UsStateMapping|undefined = await GetPaShimUsStateData();
+    // const paShimUsStatesData:UsStateMapping|undefined = await GetPaShimUsStateData();
 
     
 }
