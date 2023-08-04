@@ -144,5 +144,41 @@ describe("[CM-728] - Jurisdiction Versions - No duplicates.", () => {
     })
 })
 
+describe("[CM-729] - Jurisdictions - 1 jurisdiction per state.", () => {
+    before("Get the test data.", async () => {
+        PA_SHIM_STATES_DATA = await GetPaShimUsStateData();
+        JURISDICTION_DATA = await HitEndpoint(Urls.Dev, Endpoints.Jurisdictions) as Jurisdiction[];
+    });
 
+    it.only("Verify that there is exactly 1 jurisdiction per state.", () => {
+        // Get list of unique ipc jurisdictions
+        const ipcJurisdictionUniqueNames:string[] = JURISDICTION_DATA.map((entry) => {
+            return entry.unique_name.replace("US-","")
+        })
+
+        console.log(ipcJurisdictionUniqueNames)
+        console.log([...new Set(ipcJurisdictionUniqueNames)])
+
+        // If the original arrary's length is equal to the number of its unique elements, then the original array only contained unique elements. In other words, no duplicates.
+        expect(ipcJurisdictionUniqueNames.length).to.equal([...new Set(ipcJurisdictionUniqueNames)].length)
+    })
+
+    it("Verify that IPC has the same jurisdictions as pa_shim.", () => {
+        // Get list of unique ipc jurisdictions
+        const ipcJurisdictionUniqueNames:string[] = JURISDICTION_DATA.map((entry) => {
+            return entry.unique_name.replace("US-","")
+        })
+
+        // Get list of unique pa_shim jurisdictions
+        const paShimJurisdictionUniqueNames:string[] = Object.keys(PA_SHIM_STATES_DATA as UsStateMapping)
+
+        // If the difference between the arrays is 0, then they contain an identical set of jurisdictions.
+        const jurisdictionArrayDifference:string[] = ipcJurisdictionUniqueNames.filter((jurisdiction) => !paShimJurisdictionUniqueNames.includes(jurisdiction));
+
+        console.log(paShimJurisdictionUniqueNames)
+        console.log(ipcJurisdictionUniqueNames)
+
+        expect(jurisdictionArrayDifference.length).to.equal(0)
+    })
+})
 
