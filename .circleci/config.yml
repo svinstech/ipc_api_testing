@@ -22,7 +22,7 @@ commands:
 jobs:
   ipc-tests:
     docker:
-      image: cimg/node:current
+      - image: cimg/node:current
     environment:
       GITHUB_TOKEN: GITHUB_TOKEN
     steps:
@@ -32,8 +32,7 @@ jobs:
           name: Run IPC tests
           command: yarn run test
       - slack-notifier/build-status-notification: 
-          header: ""
-          additional-text: "Empty string header"
+          header: "Insurance Product Core Tests"
           channel-webhook-environment-variables: WEBHOOK_KELLEN_KINCAID
 
 workflows:
