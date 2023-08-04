@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  slack-notifier: svinstech/slack-notifier-orb@1
+
+commands:
+  install-packages:
+    steps:
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --immutable
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+jobs:
+  ipc-tests:
+    docker:
+      image: cimg/node:current
+    environment:
+      GITHUB_TOKEN: GITHUB_TOKEN
+    steps:
+      - checkout
+      - install-packages
+      - run:
+          name: Run IPC tests
+          command: yarn run test
+      - slack-notifier/build-status-notification: 
+          header: ""
+          additional-text: "Empty string header"
+          channel-webhook-environment-variables: WEBHOOK_KELLEN_KINCAID
+
+workflows:
+  ipc-tests-workflow:
+    jobs:
+      - ipc-tests
