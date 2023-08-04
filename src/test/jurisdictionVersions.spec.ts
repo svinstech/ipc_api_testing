@@ -60,5 +60,56 @@ describe("[CM-726] - Jurisdiction Versions - Endpoint should return all sets of 
     })
 })
 
+describe("[CM-727] - Jurisdiction Versions - Live dates should match those in pa_shim", () => {
+    before("Get the test data.", async () => {
+        PA_SHIM_STATES_DATA = await GetPaShimUsStateData();
+        JURISDICTION_VERSION_DATA = await HitEndpoint(Urls.Dev, Endpoints.JurisdictionVersions) as JurisdictionVersion[];
+    });
+
+    it("Verify that each jurisdiction's effective date in IPIM matches that jurisdiction's live date in pa_shim.", async () => {
+        type LiveDateMapping = {
+            [key in UsState] : string
+        }
+
+        const paShimLiveDates:LiveDateMapping = {} as LiveDateMapping;
+        Object.entries(PA_SHIM_STATES_DATA as object).forEach((entry) => {
+            const state:UsState = entry[0] as UsState;
+            const liveDate:string = entry[1].live_at;
+            paShimLiveDates[state] = liveDate;
+        })
+
+        // console.log(paShimLiveDates)
+
+        // Pa shim versions are all 1.0.0, so we must exclude all ipc jurisdiction versions that differ from that.
+        const ipcJurisdictionsVersion1_0_0:JurisdictionVersion[] = JURISDICTION_VERSION_DATA.filter((entry) => {
+            return entry.version_number === "1.0.0";
+        })
+
+        //testing
+        // let failureCount = 0;
+
+        ipcJurisdictionsVersion1_0_0.forEach((entry) => {
+            const state:UsState = entry.jurisdiction_unique_name.replace("US-","") as UsState
+            const liveDate:string = entry.effective_date
+
+            // console.log("@@@@")
+            // console.log(state)
+            // console.log(paShimLiveDates[state])
+            // console.log(liveDate)
+            // console.log("@@ @@")
+            // try {
+                expect(paShimLiveDates[state]).to.equal(liveDate)
+            // } catch {
+            //     failureCount++; // testing
+            // }
+        })
+
+        //testing
+        // if (failureCount > 0) {
+        //     throw "some tests failed"
+        // }
+    })
+})
+
 
 
