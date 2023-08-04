@@ -111,5 +111,22 @@ describe("[CM-727] - Jurisdiction Versions - Live dates should match those in pa
     })
 })
 
+describe.only("[CM-728] - Jurisdiction Versions - No duplicates", () => {
+    before("Get the test data.", async () => {
+        PA_SHIM_STATES_DATA = await GetPaShimUsStateData();
+        JURISDICTION_VERSION_DATA = await HitEndpoint(Urls.Dev, Endpoints.JurisdictionVersions) as JurisdictionVersion[];
+    });
 
+    it("Verify that there are no duplicate combinations of product, jurisdiction, & date.", () => {
+        const productJurisdictionDateStrings:string[] = []
+        
+        JURISDICTION_VERSION_DATA.forEach((entry) => {
+            const productJurisdictionDateString:string = entry.product_line_unique_name.concat(entry.jurisdiction_unique_name).concat(entry.effective_date)
+            productJurisdictionDateStrings.push(productJurisdictionDateString)
+        })
+
+        // If the original arrary's length is equal to the number of its unique elements, then the original array only contained unique elements. In other words, no duplicates.
+        expect(productJurisdictionDateStrings.length).to.equal([...new Set(productJurisdictionDateStrings)].length)
+    })
+})
 
