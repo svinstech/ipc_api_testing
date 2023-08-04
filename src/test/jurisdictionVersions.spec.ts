@@ -1,12 +1,14 @@
 import { expect } from "chai"
 import { describe, it, before } from "mocha" //node:test
 import { GetPaShimUsStateData } from '../dataCollection'
-import { UsState, UsStateMapping, JurisdictionVersion } from '../interfaces/interfacesAndTypes'
+import { UsState, UsStateMapping, JurisdictionVersion, Jurisdiction, ProductLine } from '../interfaces/interfacesAndTypes'
 import { HitEndpoint } from '../endpoints'
 import { Urls, Endpoints } from '../constants'
 
 let PA_SHIM_STATES_DATA:UsStateMapping|undefined;
 let JURISDICTION_VERSION_DATA:JurisdictionVersion[]
+let JURISDICTION_DATA:Jurisdiction[]
+let PRODUCT_LINE_DATA:ProductLine[]
 
 describe("[CM-726] - Jurisdiction Versions - Endpoint should return all sets of products and states.", () => {
     before("Get the test data.", async () => {
@@ -60,7 +62,7 @@ describe("[CM-726] - Jurisdiction Versions - Endpoint should return all sets of 
     })
 })
 
-describe("[CM-727] - Jurisdiction Versions - Live dates should match those in pa_shim", () => {
+describe("[CM-727] - Jurisdiction Versions - Live dates should match those in pa_shim.", () => {
     before("Get the test data.", async () => {
         PA_SHIM_STATES_DATA = await GetPaShimUsStateData();
         JURISDICTION_VERSION_DATA = await HitEndpoint(Urls.Dev, Endpoints.JurisdictionVersions) as JurisdictionVersion[];
@@ -111,7 +113,7 @@ describe("[CM-727] - Jurisdiction Versions - Live dates should match those in pa
     })
 })
 
-describe("[CM-728] - Jurisdiction Versions - No duplicates", () => {
+describe("[CM-728] - Jurisdiction Versions - No duplicates.", () => {
     before("Get the test data.", async () => {
         PA_SHIM_STATES_DATA = await GetPaShimUsStateData();
         JURISDICTION_VERSION_DATA = await HitEndpoint(Urls.Dev, Endpoints.JurisdictionVersions) as JurisdictionVersion[];
@@ -128,5 +130,19 @@ describe("[CM-728] - Jurisdiction Versions - No duplicates", () => {
         // If the original arrary's length is equal to the number of its unique elements, then the original array only contained unique elements. In other words, no duplicates.
         expect(productJurisdictionDateStrings.length).to.equal([...new Set(productJurisdictionDateStrings)].length)
     })
+
+    it("Verify that there are no duplicate combinations of product, jurisdiction, & version.", () => {
+        const productJurisdictionVersionStrings:string[] = []
+        
+        JURISDICTION_VERSION_DATA.forEach((entry) => {
+            const productJurisdictionVersionString:string = entry.product_line_unique_name.concat(entry.jurisdiction_unique_name).concat(entry.version_number)
+            productJurisdictionVersionStrings.push(productJurisdictionVersionString)
+        })
+
+        // If the original arrary's length is equal to the number of its unique elements, then the original array only contained unique elements. In other words, no duplicates.
+        expect(productJurisdictionVersionStrings.length).to.equal([...new Set(productJurisdictionVersionStrings)].length)
+    })
 })
+
+
 
