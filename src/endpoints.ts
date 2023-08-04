@@ -8,11 +8,13 @@ function IsGoodResponse(_responseCode:number) :boolean {
 }
 
 async function GetResponseData(_url:string) :Promise<any> {
-    let data:any;
+    let data:any = "";
 
     await axios(_url).then((_response:AxiosResponse<any, any>) => {
         if (IsGoodResponse(_response.status)) {
             data = _response.data;
+        } else {
+            console.log(`!!! Bad response status: ${_response.status}`);
         }
     });
 

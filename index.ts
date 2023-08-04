@@ -1,5 +1,7 @@
+import { Endpoints, Urls } from './src/constants'
+import { HitEndpoint } from './src/endpoints'
 import { GetPaShimUsStateData } from './src/dataCollection'
-import { UsStateMapping } from './src/interfaces/interfacesAndTypes'
+import { Jurisdiction, JurisdictionVersion, ProductLine, UsStateMapping } from './src/interfaces/interfacesAndTypes'
 
 async function main() :Promise<void> {
     // const healthData :string = await HitEndpoint(Urls.Dev, Endpoints.Health) as string;

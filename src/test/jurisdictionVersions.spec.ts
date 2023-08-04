@@ -1,4 +1,4 @@
-import { assert } from "chai"
+import { expect } from "chai"
 import { describe, it, before } from "mocha" //node:test
 import { GetPaShimUsStateData } from '../dataCollection'
 import { UsState, UsStateMapping, JurisdictionVersion } from '../interfaces/interfacesAndTypes'
@@ -17,27 +17,30 @@ describe("[CM-726] - Jurisdiction Versions - Endpoint should return all sets of 
     it("Verify that pa_shim and IPC use the exact same set of states.", async () => {
         const paShimStates:UsState[] = Object.keys(PA_SHIM_STATES_DATA as object) as UsState[];
 
-        console.log("pa shim states")
-        console.log(paShimStates)
-
-        const jurisdictionUniqueNames:UsState[] = JURISDICTION_VERSION_DATA.map((jvData) => {
+        // Get a list of all the jurisdiction names (with no duplicates)
+        const allJurisdictionNames:UsState[] = JURISDICTION_VERSION_DATA.map((jvData) => {
             return jvData.jurisdiction_unique_name.replace("US-","")
         }) as UsState[];
+        const ipcStates:UsState[] = [...new Set(allJurisdictionNames)]
 
-        const ipcStates:UsState[] = [...new Set(jurisdictionUniqueNames)]
-
-        console.log("IPC states")
-        console.log(ipcStates)
-
+        // If the difference between the arrays is 0, then they contain an identical set of states.
         const stateArrayDifference:UsState[] = paShimStates.filter((state) => !ipcStates.includes(state));
 
-        assert(stateArrayDifference.length === 0);
+        // Log information about failures.
+        if (stateArrayDifference.length > 0) {
+            const theseOrThis = (stateArrayDifference.length > 1) ? "These states are" : "This state is"
+            console.log(`DISCREPANCY: ${theseOrThis} not shared between pa_shim & IPC: `)
+            console.log(stateArrayDifference)
+        }
+
+        expect(stateArrayDifference.length).to.equal(0);
     })
 
     it ("Verify that each state in IPC has the same products as listed in pa_shim.", () => {
         const jurisdictionUniqueNames:UsState[] = JURISDICTION_VERSION_DATA.map((jvData) => jvData.jurisdiction_unique_name.replace("US-","")) as UsState[];
         const ipcStates:UsState[] = [...new Set(jurisdictionUniqueNames)]
 
+        // For each state, compare their pa_shim product list to their IPC product list.
         ipcStates.forEach((state) => {
             const ipcJurisdictionVersionDataForThisState:JurisdictionVersion[] = JURISDICTION_VERSION_DATA.filter((jvData) => {
                 return jvData.jurisdiction_unique_name === `US-${state}`;
@@ -47,10 +50,11 @@ describe("[CM-726] - Jurisdiction Versions - Endpoint should return all sets of 
                 return jvData.product_line_unique_name;
             })
 
+            // If the difference between the arrays is 0, then they contain an identical set of products.
             const paShimProductsForThisState:string[] = (PA_SHIM_STATES_DATA as UsStateMapping)[state].products
             const productArrayDifference:string[] = paShimProductsForThisState.filter((product) => !ipcProductsForThisState.includes(product));
 
-            assert(productArrayDifference.length === 0)
+            expect(productArrayDifference.length).to.equal(0)
         })
 
     })

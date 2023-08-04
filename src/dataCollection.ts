@@ -5,11 +5,11 @@ import { readFileSync, writeFileSync, existsSync } from 'fs'
 import { PaShimUsStatesYaml, UsStateMapping } from './interfaces/interfacesAndTypes'
 
 export async function GetPaShimUsStateData() :Promise<UsStateMapping|undefined> {
-    const GITHUB_PERSONAL_ACCESS_TOKEN = process.argv[2], // 1st command line argument.
+    const GITHUB_PERSONAL_ACCESS_TOKEN = process.env.GITHUB_TOKEN,
           paShimUsStatesYamlFileName = 'paShimUsStates.yml',
           paShimUsStatesJsonFileName = 'paShimUsStates.json',
-          yamlUrl = "https://api.github.com/repos/svinstech/pa_shim/git/blobs/3a81ca37fc0df296ea76e60807b5d6e4a9468b73"
-
+          yamlUrl = "https://api.github.com/repos/svinstech/pa_shim/git/blobs/3a81ca37fc0df296ea76e60807b5d6e4a9468b73" // Points to the config/us_states.yml in pa_shim.
+    
     let paShimUsStatesData:UsStateMapping|undefined;
 
     // If the pa_shim json file exists, get its data. Otherwise, retrieve it and then get its data.
