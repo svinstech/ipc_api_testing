@@ -111,7 +111,7 @@ describe("[CM-727] - Jurisdiction Versions - Live dates should match those in pa
     })
 })
 
-describe.only("[CM-728] - Jurisdiction Versions - No duplicates", () => {
+describe("[CM-728] - Jurisdiction Versions - No duplicates", () => {
     before("Get the test data.", async () => {
         PA_SHIM_STATES_DATA = await GetPaShimUsStateData();
         JURISDICTION_VERSION_DATA = await HitEndpoint(Urls.Dev, Endpoints.JurisdictionVersions) as JurisdictionVersion[];
