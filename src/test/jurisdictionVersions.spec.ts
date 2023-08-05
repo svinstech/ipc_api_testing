@@ -13,7 +13,7 @@ let JURISDICTION_DATA:Jurisdiction[]
 let PRODUCT_LINE_DATA:ProductLine[]
 
 describe("~~~ HEALTH ~~~", () => {
-    it("Get the test data.", async () => {
+    it("Ensure that the /health endpoint works and is ok.", async () => {
         const health:string = await HitEndpoint(Url.Dev, Endpoint.Health) as string
 
         //testing
