@@ -147,6 +147,34 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             expect(productJurisdictionVersionStrings.length).to.equal([...new Set(productJurisdictionVersionStrings)].length)
         })
     })
+
+    describe("[CM-747] - Jurisdiction Version - Query.", () => {
+        it("Verify that jurisdition versions can be queried.", async () => {
+            let logCount = 5;
+
+            // Query each jurisdiction version individually.
+            JURISDICTION_VERSION_DATA.forEach((entry) => {
+                const endpoint:string = `${Endpoint.JurisdictionVersions}/${entry.id}`
+
+                HitEndpoint(Url.Dev, endpoint).then((response) => {
+                    const specificJurisdictionVersion:JurisdictionVersion = response as JurisdictionVersion
+
+                    //testing
+                    if (logCount > 0) {
+                        console.log("==============================")
+                        console.log("Queried jurisdiction version")
+                        console.log(specificJurisdictionVersion)
+                        console.log("Expected jurisdiction version")
+                        console.log(entry)
+                        console.log("==============================")
+                        logCount--;
+                    }
+
+                    expect(specificJurisdictionVersion).to.equal(entry)
+                })
+            })
+        })
+    })
 })
 
 describe("~~~ JURISDICTION ~~~", () => {
