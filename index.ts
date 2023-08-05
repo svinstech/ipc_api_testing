@@ -1,5 +1,4 @@
-import { Endpoints, Urls } from './src/constants'
-import { HitEndpoint } from './src/endpoints'
+import { Endpoint, Url } from './src/constants'
 import { GetPaShimUsStateData } from './src/dataCollection'
 import { Jurisdiction, JurisdictionVersion, ProductLine, UsStateMapping } from './src/interfaces/interfacesAndTypes'
 

@@ -31,6 +31,11 @@ export interface ProductLine {
 
 export type Products = "BOP" | "CEM" | "CPP" | "CRIME" | "MPL" | "NY_D_AND_O" | "NY_TPL"
 
+export interface TestData {
+    paShimStatesData : UsStateMapping,
+    ipcData : string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[]
+}
+
 export type UsState = "AL" | "AK" | "AZ" | "AR" | "CA" | "CO" | "CT" | "DE" | "FL" | "GA" | "HI" | "ID" | "IL" 
                     | "IN" | "IA" | "KS" | "KY" | "LA" | "ME" | "MD" | "MA" | "MI" | "MN" | "MS" | "MO" | "MT" 
                     | "NE" | "NV" | "NH" | "NJ" | "NM" | "NY" | "NC" | "ND" | "OH" | "OK" | "OR" | "PA" | "RI" 
