@@ -1,6 +1,6 @@
 import { expect } from "chai"
 import { describe, it, before } from "mocha"
-import { GetTestData } from '../dataCollection'
+import { GetTestData, HitEndpoint } from '../dataCollection'
 import { LogArrayDifference } from '../dataCommunication'
 import { GetUniqueArrayOfIpcStates, ArrayDifference, GetUniqueArrayOfPaShimStates, GetUniqueArrayOfPaShimProducts } from '../dataManipulation'
 import { UsState, UsStateMapping, JurisdictionVersion, Jurisdiction, ProductLine, TestData } from '../interfaces/interfacesAndTypes'
@@ -11,6 +11,17 @@ let PA_SHIM_STATES_DATA:UsStateMapping;
 let JURISDICTION_VERSION_DATA:JurisdictionVersion[]
 let JURISDICTION_DATA:Jurisdiction[]
 let PRODUCT_LINE_DATA:ProductLine[]
+
+describe("~~~ HEALTH ~~~", () => {
+    it("Get the test data.", async () => {
+        const health:string = await HitEndpoint(Url.Dev, Endpoint.Health) as string
+
+        //testing
+        console.log(`health: ${health}`)
+
+        expect(health.toLowerCase()).to.equal("ok")
+    });
+})
 
 describe("~~~ JURISDICTION VERSION ~~~", () => {
     before("Get the test data.", async () => {
