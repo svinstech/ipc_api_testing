@@ -18,7 +18,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
     });
 
     describe("[CM-726] - Jurisdiction Versions - Endpoint should return all sets of products and states.", () => {
-        it("Verify that pa_shim and IPC use the exact same set of states.", async () => {
+        it("Verify that pa_shim and IPC use the exact same set of states.", () => {
             const paShimStates:UsState[] = GetUniqueArrayOfPaShimStates(PA_SHIM_STATES_DATA);
     
             //testing
@@ -68,7 +68,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
     })
     
     describe("[CM-727] - Jurisdiction Versions - Live dates should match those in pa_shim.", () => {
-        it("Verify that each jurisdiction's effective date in IPIM matches that jurisdiction's live date in pa_shim.", async () => {
+        it("Verify that each jurisdiction's effective date in IPIM matches that jurisdiction's live date in pa_shim.", () => {
             type LiveDateMapping = {
                 [key in UsState] : string
             }
@@ -136,7 +136,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
     })
 
     describe("[CM-747] - Jurisdiction Version - Query.", () => {
-        it("Verify that jurisdition versions can be queried.", async () => {
+        it("Verify that jurisdition versions can be queried.", () => {
             let logCount = 5;
 
             // Query each jurisdiction version individually.
