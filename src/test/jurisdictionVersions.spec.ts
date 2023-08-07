@@ -147,15 +147,15 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
                     const specificJurisdictionVersion:JurisdictionVersion = response as JurisdictionVersion
 
                     //testing
-                    if (logCount > 0) {
-                        console.log("==============================")
-                        console.log("Queried jurisdiction version")
-                        console.log(specificJurisdictionVersion)
-                        console.log("Expected jurisdiction version")
-                        console.log(entry)
-                        console.log("==============================")
-                        logCount--;
-                    }
+                    // if (logCount > 0) {
+                    //     console.log("==============================")
+                    //     console.log("Queried jurisdiction version")
+                    //     console.log(specificJurisdictionVersion)
+                    //     console.log("Expected jurisdiction version")
+                    //     console.log(entry)
+                    //     console.log("==============================")
+                    //     logCount--;
+                    // }
 
                     expect(specificJurisdictionVersion).to.equal(entry)
                 })
