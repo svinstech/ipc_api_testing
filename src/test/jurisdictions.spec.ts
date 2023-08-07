@@ -10,7 +10,7 @@ let JURISDICTION_DATA:Jurisdiction[]
 
 describe("~~~ JURISDICTIONS ~~~", () => {
     before("Get the test data.", async () => {
-        const testData:TestData = await GetTestData(Url.Dev, Endpoint.Jurisdictions)
+        const testData:TestData = await GetTestData(Url.Stg, Endpoint.Jurisdictions)
         PA_SHIM_STATES_DATA = testData.paShimStatesData
         JURISDICTION_DATA = testData.ipcData as Jurisdiction[]
     });
