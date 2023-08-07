@@ -28,8 +28,11 @@ describe("~~~ JURISDICTIONS ~~~", () => {
             console.log("IPC jurisdiction Names (set)")
             console.log([...new Set(ipcJurisdictionUniqueNames)])
     
+            const nameCount = ipcJurisdictionUniqueNames.length
+            const uniqueNameCount = [...new Set(ipcJurisdictionUniqueNames)].length
+
             // If the original arrary's length is equal to the number of its unique elements, then the original array only contained unique elements. In other words, no duplicates.
-            expect(ipcJurisdictionUniqueNames.length).to.equal([...new Set(ipcJurisdictionUniqueNames)].length)
+            expect(nameCount, `Number of duplicates = ${Math.abs(nameCount - uniqueNameCount)}`).to.equal(uniqueNameCount)
         })
     
         it("Verify that IPC has the same jurisdictions as pa_shim.", () => {
@@ -47,7 +50,8 @@ describe("~~~ JURISDICTIONS ~~~", () => {
             console.log("ipcJurisdictionUniqueNames")
             console.log(ipcJurisdictionUniqueNames)
     
-            expect(jurisdictionArrayDifference.length).to.equal(0)
+            const errorMessage:any = jurisdictionArrayDifference
+            expect(jurisdictionArrayDifference.length, errorMessage).to.equal(0)
         })
     })
 })

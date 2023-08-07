@@ -37,7 +37,8 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             // Log information about failures.
             LogArrayDifference(stateArrayDifference)
     
-            expect(stateArrayDifference.length).to.equal(0);
+            const errorMessage:any = stateArrayDifference
+            expect(stateArrayDifference.length, errorMessage).to.equal(0);
         })
     
         it("Verify that each state in IPC has the same products as listed in pa_shim.", () => {
@@ -61,9 +62,9 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
                 // Log information about failures.
                 LogArrayDifference(productArrayDifference)
 
-                expect(productArrayDifference.length).to.equal(0)
+                const errorMessage:any = productArrayDifference
+                expect(productArrayDifference.length, errorMessage).to.equal(0)
             })
-    
         })
     })
     
@@ -84,17 +85,17 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             const ipcJurisdictionsVersion1_0_0:JurisdictionVersion[] = JURISDICTION_VERSION_DATA.filter((entry) => {
                 return entry.version_number === "1.0.0";
             })
-    
+
             ipcJurisdictionsVersion1_0_0.forEach((entry) => {
                 const state:UsState = entry.jurisdiction_unique_name.replace("US-","") as UsState
                 const liveDate:string = entry.effective_date
-    
+
                 //testing
                 console.log(`State: ${state}`)
                 console.log(`Pa_shim live date: ${paShimLiveDates[state]}`)
                 console.log(`IPC live date: ${liveDate}`)
 
-                expect(paShimLiveDates[state]).to.equal(liveDate)
+                expect(paShimLiveDates[state], state).to.equal(liveDate)
             })
         })
     })
@@ -114,7 +115,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             console.log(shuffle.pick(productJurisdictionDateStrings, { 'picks': subArraySize }))
 
             // If the original arrary's length is equal to the number of its unique elements, then the original array only contains unique elements. In other words, no duplicates.
-            expect(productJurisdictionDateStrings.length).to.equal([...new Set(productJurisdictionDateStrings)].length)
+            expect(productJurisdictionDateStrings.length, ).to.equal([...new Set(productJurisdictionDateStrings)].length)
         })
     
         it("Verify that there are no duplicate combinations of product, jurisdiction, & version.", () => {
@@ -130,14 +131,17 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             console.log(`${subArraySize} random entries from productJurisdictionVersionStrings`)
             console.log(shuffle.pick(productJurisdictionVersionStrings, { 'picks': subArraySize }))
     
+            const stringCount = productJurisdictionVersionStrings.length;
+            const uniqueStringCount = [...new Set(productJurisdictionVersionStrings)].length;
+
             // If the original arrary's length is equal to the number of its unique elements, then the original array only contained unique elements. In other words, no duplicates.
-            expect(productJurisdictionVersionStrings.length).to.equal([...new Set(productJurisdictionVersionStrings)].length)
+            expect(stringCount, `Number of duplicates: ${Math.abs(stringCount - uniqueStringCount)}`).to.equal(uniqueStringCount)
         })
     })
 
     describe("[CM-747] - Jurisdiction Version - Query.", () => {
         it("Verify that jurisdition versions can be queried.", () => {
-            let logCount = 5;
+            // let logCount = 5;
 
             // Query each jurisdiction version individually.
             JURISDICTION_VERSION_DATA.forEach((entry) => {

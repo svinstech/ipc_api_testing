@@ -28,7 +28,8 @@ describe("~~~ PRODUCT LINES ~~~", () => {
             // If the difference between the arrays is 0, then they contain an identical set of jurisdictions.
             const productArrayDifference:string[] = ArrayDifference(ipcProductLineUniqueNames, paShimProductsUniqueNames)//ipcProductLineUniqueNames.filter((product) => !paShimProductsUniqueNames.includes(product));
     
-            expect(productArrayDifference.length).to.equal(0)
+            const errorMessage:any = productArrayDifference
+            expect(productArrayDifference.length, errorMessage).to.equal(0)
         })
     })
 })
