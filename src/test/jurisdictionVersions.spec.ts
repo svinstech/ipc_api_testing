@@ -4,7 +4,7 @@ import { GetTestData, HitEndpoint } from '../dataCollection'
 import { LogArrayDifference } from '../dataCommunication'
 import { GetUniqueArrayOfIpcStates, ArrayDifference, GetUniqueArrayOfPaShimStates } from '../dataManipulation'
 import { UsState, UsStateMapping, JurisdictionVersion, TestData } from '../interfaces/interfacesAndTypes'
-import { Url, Endpoint } from '../constants'
+import { Endpoint, ENVIRONMENT } from '../constants'
 import shuffle from 'shuffle-array'
 
 let PA_SHIM_STATES_DATA:UsStateMapping;
@@ -12,7 +12,7 @@ let JURISDICTION_VERSION_DATA:JurisdictionVersion[]
 
 describe("~~~ JURISDICTION VERSION ~~~", () => {
     before("Get the test data.", async () => {
-        const testData:TestData = await GetTestData(Url.Stg, Endpoint.JurisdictionVersions)
+        const testData:TestData = await GetTestData(ENVIRONMENT, Endpoint.JurisdictionVersions)
         PA_SHIM_STATES_DATA = testData.paShimStatesData
         JURISDICTION_VERSION_DATA = testData.ipcData as JurisdictionVersion[]
     });
@@ -143,7 +143,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             JURISDICTION_VERSION_DATA.forEach((entry) => {
                 const endpoint:string = `${Endpoint.JurisdictionVersions}/${entry.id}`
 
-                HitEndpoint(Url.Dev, endpoint).then((response) => {
+                HitEndpoint(ENVIRONMENT, endpoint).then((response) => {
                     const specificJurisdictionVersion:JurisdictionVersion = response as JurisdictionVersion
 
                     //testing

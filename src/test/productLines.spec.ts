@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { describe, it, before } from "mocha"
-import { Url, Endpoint } from "../constants";
+import { Endpoint, ENVIRONMENT } from "../constants";
 import { GetTestData } from "../dataCollection";
 import { GetUniqueArrayOfPaShimProducts, ArrayDifference } from "../dataManipulation";
 import { TestData, ProductLine, UsStateMapping } from "../interfaces/interfacesAndTypes";
@@ -10,7 +10,7 @@ let PRODUCT_LINE_DATA:ProductLine[]
 
 describe("~~~ PRODUCT LINES ~~~", () => {
     before("Get the test data.", async () => {
-        const testData:TestData = await GetTestData(Url.Stg, Endpoint.ProductLines)
+        const testData:TestData = await GetTestData(ENVIRONMENT, Endpoint.ProductLines)
         PA_SHIM_STATES_DATA = testData.paShimStatesData
         PRODUCT_LINE_DATA = testData.ipcData as ProductLine[]
     });

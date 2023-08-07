@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { describe, it, before } from "mocha"
-import { Url, Endpoint } from "../constants";
+import { Endpoint, ENVIRONMENT } from "../constants";
 import { GetTestData } from "../dataCollection";
 import { GetUniqueArrayOfIpcStates, GetUniqueArrayOfPaShimStates, ArrayDifference } from "../dataManipulation";
 import { TestData, Jurisdiction, UsState, UsStateMapping } from "../interfaces/interfacesAndTypes";
@@ -10,7 +10,7 @@ let JURISDICTION_DATA:Jurisdiction[]
 
 describe("~~~ JURISDICTIONS ~~~", () => {
     before("Get the test data.", async () => {
-        const testData:TestData = await GetTestData(Url.Stg, Endpoint.Jurisdictions)
+        const testData:TestData = await GetTestData(ENVIRONMENT, Endpoint.Jurisdictions)
         PA_SHIM_STATES_DATA = testData.paShimStatesData
         JURISDICTION_DATA = testData.ipcData as Jurisdiction[]
     });

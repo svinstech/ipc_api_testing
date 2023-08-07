@@ -14,3 +14,8 @@ export enum Endpoint {
     ProductLines = "product-lines"
 }
 
+export const ENVIRONMENT :Url = Url[process.env.ENV as keyof typeof Url];
+
+//testing
+console.log("Environment is:")
+console.log(ENVIRONMENT)
