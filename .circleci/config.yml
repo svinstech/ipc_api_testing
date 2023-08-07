@@ -21,6 +21,7 @@ commands:
 
 jobs:
   ipc-tests:
+    resource_class: svinstech/dev # Here, we use Vouch's self-hosted runner so the can gain network access.
     docker:
       - image: cimg/node:current
     steps:
