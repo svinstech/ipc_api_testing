@@ -10,7 +10,7 @@ let PRODUCT_LINE_DATA:ProductLine[]
 
 describe("~~~ PRODUCT LINES ~~~", () => {
     before("Get the test data.", async () => {
-        const testData:TestData = await GetTestData(Url.Dev, Endpoint.ProductLines)
+        const testData:TestData = await GetTestData(Url.Stg, Endpoint.ProductLines)
         PA_SHIM_STATES_DATA = testData.paShimStatesData
         PRODUCT_LINE_DATA = testData.ipcData as ProductLine[]
     });

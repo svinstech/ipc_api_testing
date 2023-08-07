@@ -12,7 +12,7 @@ let JURISDICTION_VERSION_DATA:JurisdictionVersion[]
 
 describe("~~~ JURISDICTION VERSION ~~~", () => {
     before("Get the test data.", async () => {
-        const testData:TestData = await GetTestData(Url.Dev, Endpoint.JurisdictionVersions)
+        const testData:TestData = await GetTestData(Url.Stg, Endpoint.JurisdictionVersions)
         PA_SHIM_STATES_DATA = testData.paShimStatesData
         JURISDICTION_VERSION_DATA = testData.ipcData as JurisdictionVersion[]
     });
