@@ -76,11 +76,6 @@ export async function GetTestData(_environment:Url, _endpoint:Endpoint) :Promise
 
 export async function HitEndpoint(_baseUrl:Url, _endpoint:Endpoint|string) :Promise<string|Jurisdiction[]|JurisdictionVersion[]|JurisdictionVersion|ProductLine[]> {
     const url :string = `${_baseUrl}/${_endpoint}`;
-
-    //testing
-    console.log("URL")
-    console.log(url)
-
     const data :any = await GetResponseData(url);
 
     return data;
