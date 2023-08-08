@@ -1,3 +1,8 @@
+export interface DataAndStatus<T> {
+    data: T,
+    status: number
+}
+
 export interface Jurisdiction {
     id: string,
     unique_name: string
@@ -32,8 +37,8 @@ export interface ProductLine {
 export type Products = "BOP" | "CEM" | "CPP" | "CRIME" | "MPL" | "NY_D_AND_O" | "NY_TPL"
 
 export interface TestData {
-    paShimStatesData : UsStateMapping,
-    ipcData : string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[]
+    paShimStatesData : DataAndStatus<UsStateMapping>,
+    ipcData : DataAndStatus<string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[]>
 }
 
 export type UsState = "AL" | "AK" | "AZ" | "AR" | "CA" | "CO" | "CT" | "DE" | "FL" | "GA" | "HI" | "ID" | "IL" 

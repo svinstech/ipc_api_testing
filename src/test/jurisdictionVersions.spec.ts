@@ -1,31 +1,39 @@
 import { expect } from "chai"
 import { describe, it, before } from "mocha"
-import { GetTestData, HitEndpoint } from '../dataCollection'
+import { GetTestData, HitEndpoint, IsGoodResponse } from '../dataCollection'
 import { LogArrayDifference } from '../dataCommunication'
 import { GetUniqueArrayOfIpcStates, ArrayDifference, GetUniqueArrayOfPaShimStates } from '../dataManipulation'
-import { UsState, UsStateMapping, JurisdictionVersion, TestData } from '../interfaces/interfacesAndTypes'
+import { UsState, UsStateMapping, JurisdictionVersion, TestData, DataAndStatus } from '../interfaces/interfacesAndTypes'
 import { Endpoint, ENVIRONMENT } from '../constants'
 import shuffle from 'shuffle-array'
 
-let PA_SHIM_STATES_DATA:UsStateMapping;
-let JURISDICTION_VERSION_DATA:JurisdictionVersion[]
+let PA_SHIM_STATES_RESPONSE:DataAndStatus<UsStateMapping>;
+let JURISDICTION_VERSION_RESPONSE:DataAndStatus<JurisdictionVersion[]>
 
 describe("~~~ JURISDICTION VERSION ~~~", () => {
     before("Get the test data.", async () => {
         const testData:TestData = await GetTestData(ENVIRONMENT, Endpoint.JurisdictionVersions)
-        PA_SHIM_STATES_DATA = testData.paShimStatesData
-        JURISDICTION_VERSION_DATA = testData.ipcData as JurisdictionVersion[]
+        PA_SHIM_STATES_RESPONSE = testData.paShimStatesData
+        JURISDICTION_VERSION_RESPONSE = testData.ipcData as DataAndStatus<JurisdictionVersion[]>
     });
+
+    it("Verify that the PA_SHIM data was retrieved.", () => {
+        expect(IsGoodResponse(PA_SHIM_STATES_RESPONSE.status)).to.be.true
+    })
+
+    it("Verify that the JURISDICTION data was retrieved.", () => {
+        expect(IsGoodResponse(JURISDICTION_VERSION_RESPONSE.status)).to.be.true
+    })
 
     describe("[CM-726] - Jurisdiction Versions - Endpoint should return all sets of products and states.", () => {
         it("Verify that pa_shim and IPC use the exact same set of states.", () => {
-            const paShimStates:UsState[] = GetUniqueArrayOfPaShimStates(PA_SHIM_STATES_DATA);
+            const paShimStates:UsState[] = GetUniqueArrayOfPaShimStates(PA_SHIM_STATES_RESPONSE.data);
     
             //testing
             console.log("paShimStates")
             console.log(paShimStates)
 
-            const ipcStates:UsState[] = GetUniqueArrayOfIpcStates(JURISDICTION_VERSION_DATA);
+            const ipcStates:UsState[] = GetUniqueArrayOfIpcStates(JURISDICTION_VERSION_RESPONSE.data);
     
             //testing
             console.log("ipcStates")
@@ -42,12 +50,12 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
         })
     
         it("Verify that each state in IPC has the same products as listed in pa_shim.", () => {
-            const jurisdictionUniqueNames:UsState[] = JURISDICTION_VERSION_DATA.map((jvData) => jvData.jurisdiction_unique_name.replace("US-","")) as UsState[];
+            const jurisdictionUniqueNames:UsState[] = JURISDICTION_VERSION_RESPONSE.data.map((jvData) => jvData.jurisdiction_unique_name.replace("US-","")) as UsState[];
             const ipcStates:UsState[] = [...new Set(jurisdictionUniqueNames)]
     
             // For each state, compare their pa_shim product list to their IPC product list.
             ipcStates.forEach((state) => {
-                const ipcJurisdictionVersionDataForThisState:JurisdictionVersion[] = JURISDICTION_VERSION_DATA.filter((entry) => {
+                const ipcJurisdictionVersionDataForThisState:JurisdictionVersion[] = JURISDICTION_VERSION_RESPONSE.data.filter((entry) => {
                     return entry.jurisdiction_unique_name === `US-${state}`;
                 })
     
@@ -56,7 +64,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
                 })
     
                 // If the difference between the arrays is 0, then they contain an identical set of products.
-                const paShimProductsForThisState:string[] = (PA_SHIM_STATES_DATA as UsStateMapping)[state].products
+                const paShimProductsForThisState:string[] = (PA_SHIM_STATES_RESPONSE.data as UsStateMapping)[state].products
                 const productArrayDifference:string[] = ArrayDifference(paShimProductsForThisState, ipcProductsForThisState)
 
                 // Log information about failures.
@@ -75,14 +83,14 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             }
     
             const paShimLiveDates:LiveDateMapping = {} as LiveDateMapping;
-            Object.entries(PA_SHIM_STATES_DATA as object).forEach((entry) => {
+            Object.entries(PA_SHIM_STATES_RESPONSE as object).forEach((entry) => {
                 const state:UsState = entry[0] as UsState;
                 const liveDate:string = entry[1].live_at;
                 paShimLiveDates[state] = liveDate;
             })
     
             // Pa shim versions are all implied to be 1.0.0, so we must exclude all ipc jurisdiction versions that differ from that.
-            const ipcJurisdictionsVersion1_0_0:JurisdictionVersion[] = JURISDICTION_VERSION_DATA.filter((entry) => {
+            const ipcJurisdictionsVersion1_0_0:JurisdictionVersion[] = JURISDICTION_VERSION_RESPONSE.data.filter((entry) => {
                 return entry.version_number === "1.0.0";
             })
 
@@ -104,7 +112,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
         it("Verify that there are no duplicate combinations of product, jurisdiction, & date.", () => {
             const productJurisdictionDateStrings:string[] = []
             
-            JURISDICTION_VERSION_DATA.forEach((entry) => {
+            JURISDICTION_VERSION_RESPONSE.data.forEach((entry) => {
                 const productJurisdictionDateString:string = entry.product_line_unique_name.concat(entry.jurisdiction_unique_name).concat(entry.effective_date)
                 productJurisdictionDateStrings.push(productJurisdictionDateString)
             })
@@ -121,7 +129,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
         it("Verify that there are no duplicate combinations of product, jurisdiction, & version.", () => {
             const productJurisdictionVersionStrings:string[] = []
             
-            JURISDICTION_VERSION_DATA.forEach((entry) => {
+            JURISDICTION_VERSION_RESPONSE.data.forEach((entry) => {
                 const productJurisdictionVersionString:string = entry.product_line_unique_name.concat(entry.jurisdiction_unique_name).concat(entry.version_number)
                 productJurisdictionVersionStrings.push(productJurisdictionVersionString)
             })
@@ -141,27 +149,13 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
 
     describe("[CM-747] - Jurisdiction Version - Query.", () => {
         it("Verify that jurisdition versions can be queried.", () => {
-            // let logCount = 5;
-
             // Query each jurisdiction version individually.
-            JURISDICTION_VERSION_DATA.forEach((entry) => {
+            JURISDICTION_VERSION_RESPONSE.data.forEach((entry) => {
                 const endpoint:string = `${Endpoint.JurisdictionVersions}/${entry.id}`
 
                 HitEndpoint(ENVIRONMENT, endpoint).then((response) => {
-                    const specificJurisdictionVersion:JurisdictionVersion = response as JurisdictionVersion
-
-                    //testing
-                    // if (logCount > 0) {
-                    //     console.log("==============================")
-                    //     console.log("Queried jurisdiction version")
-                    //     console.log(specificJurisdictionVersion)
-                    //     console.log("Expected jurisdiction version")
-                    //     console.log(entry)
-                    //     console.log("==============================")
-                    //     logCount--;
-                    // }
-
-                    expect(specificJurisdictionVersion).to.equal(entry)
+                    const specificJurisdictionVersion: DataAndStatus<JurisdictionVersion> = response as DataAndStatus<JurisdictionVersion>
+                    expect(specificJurisdictionVersion.data).to.equal(entry)
                 })
             })
         })

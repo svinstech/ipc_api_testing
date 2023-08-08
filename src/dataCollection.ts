@@ -2,15 +2,22 @@ import axios from 'axios'
 import { AxiosResponse } from 'axios'
 import { load } from 'js-yaml'
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
-import { Jurisdiction, JurisdictionVersion, PaShimUsStatesYaml, ProductLine, TestData, UsStateMapping } from './interfaces/interfacesAndTypes'
+import { Jurisdiction, JurisdictionVersion, PaShimUsStatesYaml, ProductLine, TestData, UsStateMapping, DataAndStatus } from './interfaces/interfacesAndTypes'
 import { Url, Endpoint } from './constants'
 
 
 /*
     Returns true if the given response code is a 2xx code. False otherwse.
 */
-function IsGoodResponse(_responseCode:number) :boolean {
-    return _responseCode >= 200 && _responseCode < 300
+export function IsGoodResponse(_responseCode:number) :boolean {
+    const output:boolean = _responseCode >= 200 && _responseCode < 300
+
+    if (!output) {
+        //testing
+        console.log(_responseCode)
+    }
+
+    return output
 }
 
 /*
@@ -22,7 +29,7 @@ function IsGoodResponse(_responseCode:number) :boolean {
     If the name is not provided, then it will default to "paShimUsStates"
     These 
 */
-export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :Promise<UsStateMapping> {
+export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :Promise<DataAndStatus<UsStateMapping>> {
     _fileNameWithoutExtension ??= "paShimUsStates"
 
     const GITHUB_PERSONAL_ACCESS_TOKEN = process.env.GITHUB_TOKEN,
@@ -31,6 +38,7 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
           paShimUsStatesJsonFileName = `${collectedDataDirectoryName}/${_fileNameWithoutExtension}.json`,
           yamlUrl = "https://api.github.com/repos/svinstech/pa_shim/git/blobs/3a81ca37fc0df296ea76e60807b5d6e4a9468b73" // Points to the config/us_states.yml in pa_shim.
     
+    let output:DataAndStatus<any> = {data:{},status:200}
     let paShimUsStatesData:UsStateMapping|undefined;
 
     // If the pa_shim json file exists, get its data. Otherwise, retrieve it and then get its data.
@@ -45,8 +53,9 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
                 "X-GitHub-Api-Version" : "2022-11-28",
                 "Accept" : "application/vnd.github.raw"
             }
-        }).then((response:AxiosResponse<any, any>) => {
-            const yamlData:string = response.data
+        }).then((_response:AxiosResponse<any, any>) => {
+            output.status = _response.status
+            const yamlData:string = _response.data
 
             // Create directory for collected data
             mkdirSync(collectedDataDirectoryName)
@@ -67,32 +76,39 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
         throw(`!!! Error - pa_shim data is empty!`)
     }
 
-    return paShimUsStatesData as UsStateMapping;
+    output.data = paShimUsStatesData;
+
+    return output
 }
 
 /*
     Takes an API endpoint and returns the response data.
 */
-async function GetResponseData(_url:string) :Promise<any> {
-    let data:any = "";
+async function GetResponseData(_url:string) :Promise<DataAndStatus<any>> {
+    let output:DataAndStatus<any> = {data:{},status:200};
 
     await axios(_url).then((_response:AxiosResponse<any, any>) => {
-        if (IsGoodResponse(_response.status)) {
-            data = _response.data;
-        } else {
-            console.log(`!!! Bad response status: ${_response.status}`);
+        output = {
+            data : _response.data,
+            status : _response.status
         }
+
+        if (!IsGoodResponse(_response.status)) {
+            console.log(`! Bad response status: ${_response.status}`);
+        }
+    }).catch((error) => {
+        throw(`!!! Error hitting endpoint: ${error}`)
     });
 
-    return data;
+    return output;
 }
 
 /*
     Retrieves and returns the pa_shim UsState.yml data and the IPC data from the provided API endpoint in the provided environment.
 */
 export async function GetTestData(_environment:Url, _endpoint:Endpoint) :Promise<TestData> {
-    const paShimStatesData :UsStateMapping = await GetPaShimUsStateData();
-    const ipcData :string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[] = await HitEndpoint(_environment, _endpoint) as string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[];
+    const paShimStatesData :DataAndStatus<UsStateMapping> = await GetPaShimUsStateData();
+    const ipcData :DataAndStatus<string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[]> = await HitEndpoint(_environment, _endpoint);
 
     const testData :TestData = {paShimStatesData, ipcData}
 
@@ -102,9 +118,9 @@ export async function GetTestData(_environment:Url, _endpoint:Endpoint) :Promise
 /*
     Returns the data retrieved from the given endpoint with the given base url.
 */
-export async function HitEndpoint(_baseUrl:Url, _endpoint:Endpoint|string) :Promise<string|Jurisdiction[]|JurisdictionVersion[]|JurisdictionVersion|ProductLine[]> {
+export async function HitEndpoint(_baseUrl:Url, _endpoint:Endpoint|string) :Promise<DataAndStatus<any>> {
     const url :string = `${_baseUrl}/${_endpoint}`;
-    const data :any = await GetResponseData(url);
+    const data :DataAndStatus<any> = await GetResponseData(url);
 
     return data;
 }
