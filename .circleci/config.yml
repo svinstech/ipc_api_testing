@@ -44,3 +44,13 @@ workflows:
   ipc-tests-workflow:
     jobs:
       - ipc-tests
+  schedule-workflow:
+    triggers:
+      - schedule:
+          cron: "0 4 * * 3" # Every Wednesday at midnight (4am UTC)
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - ipc-tests
