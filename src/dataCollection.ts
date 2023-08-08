@@ -70,6 +70,9 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
     return paShimUsStatesData as UsStateMapping;
 }
 
+/*
+    Takes an API endpoint and returns the response data.
+*/
 async function GetResponseData(_url:string) :Promise<any> {
     let data:any = "";
 
@@ -84,6 +87,9 @@ async function GetResponseData(_url:string) :Promise<any> {
     return data;
 }
 
+/*
+    Retrieves and returns the pa_shim UsState.yml data and the IPC data from the provided API endpoint in the provided environment.
+*/
 export async function GetTestData(_environment:Url, _endpoint:Endpoint) :Promise<TestData> {
     const paShimStatesData :UsStateMapping = await GetPaShimUsStateData();
     const ipcData :string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[] = await HitEndpoint(_environment, _endpoint) as string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[];
@@ -93,6 +99,9 @@ export async function GetTestData(_environment:Url, _endpoint:Endpoint) :Promise
     return testData
 }
 
+/*
+    Returns the data retrieved from the given endpoint with the given base url.
+*/
 export async function HitEndpoint(_baseUrl:Url, _endpoint:Endpoint|string) :Promise<string|Jurisdiction[]|JurisdictionVersion[]|JurisdictionVersion|ProductLine[]> {
     const url :string = `${_baseUrl}/${_endpoint}`;
     const data :any = await GetResponseData(url);
