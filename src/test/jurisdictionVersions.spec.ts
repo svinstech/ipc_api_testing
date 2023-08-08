@@ -159,6 +159,31 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
                 })
             })
         })
+
+        it("Verify that multiple jurisdition versions can be queried simultaneously.", () => {
+            const jurisdictionVersion0:JurisdictionVersion = JURISDICTION_VERSION_RESPONSE.data[0]
+            const jurisdictionVersion1:JurisdictionVersion = JURISDICTION_VERSION_RESPONSE.data[1]
+            
+            const endpoint:string = `${Endpoint.JurisdictionVersions}?id=${jurisdictionVersion0.id}&id=${jurisdictionVersion1.id}`
+
+            HitEndpoint(ENVIRONMENT, endpoint).then((response) => {
+                const specificJurisdictionVersions: DataAndStatus<JurisdictionVersion[]> = response as DataAndStatus<JurisdictionVersion[]>
+                expect(specificJurisdictionVersions.data[0]).to.equal(jurisdictionVersion0)
+                expect(specificJurisdictionVersions.data[1]).to.equal(jurisdictionVersion1)
+            })
+            
+        })
+
+        it("Verify that fake IDs don't retrieve a jurisdiction version.", () => {
+            const endpoint:string = `${Endpoint.JurisdictionVersions}/555555`
+
+            HitEndpoint(ENVIRONMENT, endpoint).then((response) => {
+                const specificJurisdictionVersion: DataAndStatus<JurisdictionVersion> = response as DataAndStatus<JurisdictionVersion>
+                expect(IsGoodResponse(specificJurisdictionVersion.status)).to.be.false
+
+                expect(JURISDICTION_VERSION_RESPONSE.data).to.not.include(specificJurisdictionVersion.data)
+            })
+        })
     })
 })
 
