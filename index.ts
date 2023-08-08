@@ -3,6 +3,11 @@ import { GetPaShimUsStateData } from './src/dataCollection'
 import { Jurisdiction, JurisdictionVersion, ProductLine, UsStateMapping } from './src/interfaces/interfacesAndTypes'
 
 async function main() :Promise<void> {
+    ///////////////////////////////////////////////////////////////////////////////
+    //////////////////////// THIS IS JUST FOR SCRATCH WORK ////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
+
+
     // const healthData :string = await HitEndpoint(Urls.Dev, Endpoints.Health) as string;
     // const jurisdictionData :Jurisdiction[] = await HitEndpoint(Urls.Dev, Endpoints.Jurisdictions) as Jurisdiction[];
     // const jurisdictionVersionData :JurisdictionVersion[] = await HitEndpoint(Urls.Dev, Endpoints.JurisdictionVersions) as JurisdictionVersion[];
