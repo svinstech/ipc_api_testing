@@ -47,7 +47,7 @@ workflows:
   schedule-workflow:
     triggers:
       - schedule:
-          cron: "0 4 * * 3" # Every Wednesday at midnight (4am UTC)
+          cron: "0 4 * * 3" # Every Wednesday at midnight EST (4am UTC)
           filters:
             branches:
               only:
