@@ -10,6 +10,9 @@ export function ArrayDifference<T>(_array1:T[], _array2:T[]) :T[] {
     return _array1.filter((entry) => !_array2.includes(entry));
 }
 
+/*
+    Returns an array of all the unique products present in the given ProductLine array.
+*/
 export function GetUniqueArrayOfIpcProducts(_productLineData:ProductLine[]) {
     return _productLineData.map((entry) => {return entry.unique_name})
 }
@@ -37,6 +40,9 @@ export function GetUniqueArrayOfIpcStates(_jurisdictionVersionData:JurisdictionV
     return returnValue
 }
 
+/*
+    Returns an array of all the unique products present in the given UsStateMapping object.
+*/
 export function GetUniqueArrayOfPaShimProducts(_paShimStatesData:UsStateMapping) :string[] {
     const paShimProducts:string[] = Object.values(_paShimStatesData as Object).map((entry) => {return entry.products}).flat()
     return [...new Set(paShimProducts)]
