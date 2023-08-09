@@ -104,7 +104,10 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
                 console.log(`Pa_shim live date: ${paShimLiveDates[state]}`)
                 console.log(`IPC live date: ${liveDate}`)
 
-                expect(paShimLiveDates[state], state).to.equal(liveDate)
+                const paShimDateFormatted = new Date(paShimLiveDates[state]).toISOString();
+                const ipcDateFormatted = new Date(liveDate).toISOString();
+
+                expect(paShimDateFormatted, state).to.equal(ipcDateFormatted)
             })
         })
     })
