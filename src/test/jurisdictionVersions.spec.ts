@@ -86,7 +86,14 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             Object.entries(PA_SHIM_STATES_RESPONSE.data as object).forEach((entry) => {
                 const state:UsState = entry[0] as UsState;
                 const liveDate:string = entry[1].live_at;
-                paShimLiveDates[state] = liveDate;
+
+                //testing
+                console.log("LOOK HERE (pa_shim live date)")
+                console.log(liveDate)
+                console.log("LOOK HERE (pa_shim live date after .toString())")
+                console.log(liveDate.toString())
+
+                paShimLiveDates[state] = liveDate.toString();
             })
     
             // Pa shim versions are all implied to be 1.0.0, so we must exclude all ipc jurisdiction versions that differ from that.
@@ -96,11 +103,6 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
 
             ipcJurisdictionsVersion1_0_0.forEach((entry) => {
                 const state:UsState = entry.jurisdiction_unique_name.replace("US-","") as UsState
-
-                //testing
-                console.log("LOOK HERE")
-                console.log(paShimLiveDates[state])
-
                 const liveDate:string = entry.effective_date
 
                 //testing
