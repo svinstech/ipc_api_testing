@@ -35,7 +35,16 @@ jobs:
             echo "ENV=Stg" > .env
       - run:
           name: Run IPC tests
-          command: yarn run test
+          command: yarn run test:health
+      - run:
+          name: Run IPC tests
+          command: yarn run test:jurisdictions
+      - run:
+          name: Run IPC tests
+          command: yarn run test:jurisdictionVersions
+      - run:
+          name: Run IPC tests
+          command: yarn run test:productLines
       - slack-notifier/build-status-notification: 
           header: "Insurance Product Core Tests"
           channel-webhook-environment-variables: WEBHOOK_KELLEN_KINCAID

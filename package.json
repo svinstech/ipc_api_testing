@@ -4,7 +4,11 @@
   "description": "IPC Testing",
   "main": "index.ts",
   "scripts": {
-    "test": "mocha -r dotenv/config -r node_modules/ts-node/register src/**/*.spec.ts \"src/test/**/*.spec.ts\""
+    "test": "mocha -r dotenv/config -r node_modules/ts-node/register \"src/test/**/*.spec.ts\"",
+    "test:health": "mocha -r dotenv/config -r node_modules/ts-node/register \"src/test/**/health.spec.ts\"",
+    "test:jurisdictions": "mocha -r dotenv/config -r node_modules/ts-node/register \"src/test/**/jurisdictions.spec.ts\"",
+    "test:jurisdictionVersions": "mocha -r dotenv/config -r node_modules/ts-node/register \"src/test/**/jurisdictionVersions.spec.ts\"",
+    "test:productLines": "mocha -r dotenv/config -r node_modules/ts-node/register \"src/test/**/productLines.spec.ts\""
   },
   "author": "Kellen Kincaid",
   "license": "MIT",
