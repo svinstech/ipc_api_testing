@@ -87,13 +87,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
                 const state:UsState = entry[0] as UsState;
                 const liveDate:string = entry[1].live_at;
 
-                //testing
-                console.log("LOOK HERE (pa_shim live date)")
-                console.log(liveDate)
-                console.log("LOOK HERE (pa_shim live date after .toString())")
-                console.log(liveDate.toString())
-
-                paShimLiveDates[state] = liveDate.toString();
+                paShimLiveDates[state] = liveDate;
             })
     
             // Pa shim versions are all implied to be 1.0.0, so we must exclude all ipc jurisdiction versions that differ from that.
