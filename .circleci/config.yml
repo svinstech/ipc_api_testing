@@ -34,16 +34,16 @@ jobs:
             echo "GITHUB_TOKEN=$GITHUB_TOKEN" > .env
             echo "ENV=Stg" > .env
       - run:
-          name: Run IPC tests
+          name: Run IPC Health tests
           command: yarn run test:health
       - run:
-          name: Run IPC tests
+          name: Run IPC Jurisdiction tests
           command: yarn run test:jurisdictions
       - run:
-          name: Run IPC tests
+          name: Run IPC Jurisdiction Version tests
           command: yarn run test:jurisdictionVersions
       - run:
-          name: Run IPC tests
+          name: Run IPC Product Lines tests
           command: yarn run test:productLines
       - slack-notifier/build-status-notification: 
           header: "Insurance Product Core Tests"
