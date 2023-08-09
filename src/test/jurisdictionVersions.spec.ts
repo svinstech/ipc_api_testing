@@ -99,13 +99,13 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
                 const state:UsState = entry.jurisdiction_unique_name.replace("US-","") as UsState
                 const liveDate:string = entry.effective_date
 
-                //testing
-                console.log(`State: ${state}`)
-                console.log(`Pa_shim live date: ${paShimLiveDates[state]}`)
-                console.log(`IPC live date: ${liveDate}`)
-
                 const paShimDateFormatted = new Date(paShimLiveDates[state]).toISOString();
                 const ipcDateFormatted = new Date(liveDate).toISOString();
+
+                //testing
+                console.log(`State: ${state}`)
+                console.log(`Pa_shim live date: ${paShimDateFormatted}`)
+                console.log(`IPC live date: ${ipcDateFormatted}`)
 
                 expect(paShimDateFormatted, state).to.equal(ipcDateFormatted)
             })
