@@ -83,7 +83,7 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
             }
     
             const paShimLiveDates:LiveDateMapping = {} as LiveDateMapping;
-            Object.entries(PA_SHIM_STATES_RESPONSE as object).forEach((entry) => {
+            Object.entries(PA_SHIM_STATES_RESPONSE.data as object).forEach((entry) => {
                 const state:UsState = entry[0] as UsState;
                 const liveDate:string = entry[1].live_at;
                 paShimLiveDates[state] = liveDate;
@@ -96,6 +96,11 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
 
             ipcJurisdictionsVersion1_0_0.forEach((entry) => {
                 const state:UsState = entry.jurisdiction_unique_name.replace("US-","") as UsState
+
+                //testing
+                console.log("LOOK HERE")
+                console.log(paShimLiveDates[state])
+
                 const liveDate:string = entry.effective_date
 
                 //testing
