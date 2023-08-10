@@ -190,5 +190,3 @@ describe("~~~ JURISDICTION VERSION ~~~", () => {
         })
     })
 })
-
-
