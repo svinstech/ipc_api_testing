@@ -9,14 +9,7 @@ import { Url, Endpoint } from './constants'
     Returns true if the given response code is a 2xx code. False otherwse.
 */
 export function IsGoodResponse(_responseCode:number) :boolean {
-    const output:boolean = _responseCode >= 200 && _responseCode < 300
-
-    if (!output) {
-        //testing
-        console.log(_responseCode)
-    }
-
-    return output
+    return _responseCode >= 200 && _responseCode < 300;
 }
 
 /*
