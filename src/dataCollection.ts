@@ -5,7 +5,6 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { Jurisdiction, JurisdictionVersion, PaShimUsStatesYaml, ProductLine, TestData, UsStateMapping, DataAndStatus } from './interfaces/interfacesAndTypes'
 import { Url, Endpoint } from './constants'
 
-
 /*
     Returns true if the given response code is a 2xx code. False otherwse.
 */
