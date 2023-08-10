@@ -1,6 +1,6 @@
-# # Insurance Products Core (IPC) API test suite
+# Insurance Products Core (IPC) API test suite
 
-#### Author: Kellen Kincaid, Senior SDET
+###### Author: Kellen Kincaid, Senior SDET
 
 ### RUNNING THE TESTS LOCALLY
 Firstly, need to be on the VPN. Follow [these instructions](https://vouchinc.atlassian.net/wiki/spaces/devops/pages/2311979049/VPN+Access) if you need access.
