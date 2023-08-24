@@ -1,5 +1,3 @@
-
-
 /*
     This is meant to receive an array that contains the difference between 2 arrays.
     It logs that array after explaining the problem that it represents.
