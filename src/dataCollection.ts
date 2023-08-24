@@ -116,7 +116,3 @@ export async function HitEndpoint(_baseUrl:Url, _endpoint:Endpoint|string) :Prom
 
     return data;
 }
-
-
-
-

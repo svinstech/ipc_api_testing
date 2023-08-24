@@ -9,4 +9,3 @@ export function LogArrayDifference(_differenceArray:string[]) :void {
         console.log(_differenceArray)
     }
 }
-
