@@ -1,6 +1,5 @@
 import { Jurisdiction, JurisdictionVersion, ProductLine, UsState, UsStateMapping } from "./interfaces/interfacesAndTypes";
 
-
 /*
     Returns an array that only contains the elements that are NOT shared between the 2 input arrays.
 
