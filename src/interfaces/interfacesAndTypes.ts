@@ -1,3 +1,8 @@
+export interface DataAndStatus<T> {
+    data: T,
+    status: number
+}
+
 export interface Jurisdiction {
     id: string,
     unique_name: string
@@ -12,6 +17,16 @@ export interface JurisdictionVersion {
     jurisdiction_unique_name: string
 }
 
+export interface PaShimUsStatesYaml {
+    default: UsStateMapping,
+    development: UsStateMapping,
+    test: UsStateMapping,
+    staging: UsStateMapping,
+    uat: UsStateMapping,
+    dev: UsStateMapping,
+    production: UsStateMapping
+}
+
 export interface ProductLine {
     id: string,
     unique_name: string,
@@ -19,15 +34,17 @@ export interface ProductLine {
     fronting_carrier_unique_name: string
 }
 
-export interface PaShimUsStatesYaml {
-    default: object,
-    development: object,
-    test: object,
-    staging: object,
-    uat: object,
-    dev: object,
-    production: object
+export type Products = "BOP" | "CEM" | "CPP" | "CRIME" | "MPL" | "NY_D_AND_O" | "NY_TPL"
+
+export interface TestData {
+    paShimStatesData : DataAndStatus<UsStateMapping>,
+    ipcData : DataAndStatus<string|Jurisdiction[]|JurisdictionVersion[]|ProductLine[]>
 }
+
+export type UsState = "AL" | "AK" | "AZ" | "AR" | "CA" | "CO" | "CT" | "DE" | "FL" | "GA" | "HI" | "ID" | "IL" 
+                    | "IN" | "IA" | "KS" | "KY" | "LA" | "ME" | "MD" | "MA" | "MI" | "MN" | "MS" | "MO" | "MT" 
+                    | "NE" | "NV" | "NH" | "NJ" | "NM" | "NY" | "NC" | "ND" | "OH" | "OK" | "OR" | "PA" | "RI" 
+                    | "SC" | "SD" | "TN" | "TX" | "UT" | "VT" | "VA" | "WA" | "WV" | "WI" | "WY"
 
 export interface UsStateData {
     full_name: string,
@@ -36,10 +53,6 @@ export interface UsStateData {
     time_zone: string,
     products: Products[]
 }
-
-export type Products = "BOP" | "CEM" | "CPP" | "CRIME" | "MPL" | "NY_D_AND_O" | "NY_TPL"
-
-export type UsState = "AL" | "AK" | "AZ" | "AR" | "CA" | "CO" | "CT" | "DE" | "FL" | "GA" | "HI" | "ID" | "IL" | "IN" | "IA" | "KS" | "KY" | "LA" | "ME" | "MD" | "MA" | "MI" | "MN" | "MS" | "MO" | "MT" | "NE" | "NV" | "NH" | "NJ" | "NM" | "NY" | "NC" | "ND" | "OH" | "OK" | "OR" | "PA" | "RI" | "SC" | "SD" | "TN" | "TX" | "UT" | "VT" | "VA" | "WA" | "WV" | "WI" | "WY"
 
 export type UsStateMapping = {
     [key in UsState]: UsStateData
