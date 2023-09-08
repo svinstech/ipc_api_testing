@@ -31,9 +31,8 @@ jobs:
           name: Set up environment variable(s)
           command: |
             touch .env
-            echo "GITHUB_TOKEN=$GITHUB_TOKEN" > .env
-            echo "ENV=Stg" > .env
-            cat .env
+            echo "GITHUB_API_TOKEN=$GITHUB_API_TOKEN" >> .env
+            echo "ENV=Stg" >> .env
       - run:
           name: Run IPC Health tests
           command: yarn run test:health

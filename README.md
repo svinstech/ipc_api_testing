@@ -9,14 +9,14 @@ Firstly, need to be on the VPN. Follow [these instructions](https://vouchinc.atl
 Secondly, you'll need a GitHub personal access token. You can learn how to generate one [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
 Thirdly, you'll need to create a file at the root of this project called `.env`.
 - In that file, add:
-    - `GITHUB_TOKEN=<yourGitHubPersonalAccessToken>`
+    - `GITHUB_API_TOKEN=<yourGitHubPersonalAccessToken>`
     - `ENV=Dev`
         - For future reference, here are all of the acceptable `ENV` values:
             - `Dev`
             - `Stg`
             - `Uat`
             - `Prod`
-- Replace everything to the right of `GITHUB_TOKEN=` with your own GitHub personal access token.
+- Replace everything to the right of `GITHUB_API_TOKEN=` with your own GitHub personal access token.
 - This file is in the `.gitignore`, so it will not be included in any merges.
 
 To run all the tests, enter this in the command line: `yarn run test`
