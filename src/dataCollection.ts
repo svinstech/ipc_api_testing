@@ -35,6 +35,12 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
         `process.env.GITHUB_TOKEN length: ${(process.env.GITHUB_TOKEN ?? '').toString().length}`,
     );
     console.log(`process.env.ENV: ${(process.env.ENV ?? '').toString()}`);
+    console.log("====== process.env entries START")
+    Object.entries(process.env).forEach((entry) => {
+        console.log(entry)
+    })
+    console.log("====== process.env entries END")
+
 
     let output:DataAndStatus<any> = {data:{},status:200}
     let paShimUsStatesData:UsStateMapping|undefined;
