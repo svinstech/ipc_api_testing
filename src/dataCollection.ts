@@ -30,6 +30,12 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
           paShimUsStatesJsonFileName = `${collectedDataDirectoryName}/${_fileNameWithoutExtension}.json`,
           yamlUrl = "https://api.github.com/repos/svinstech/pa_shim/git/blobs/3a81ca37fc0df296ea76e60807b5d6e4a9468b73" // Points to the config/us_states.yml in pa_shim.
     
+    //testing
+    console.log(
+        `process.env.GITHUB_TOKEN length: ${(process.env.GITHUB_TOKEN ?? '').toString().length}`,
+    );
+    console.log(`process.env.ENV: ${(process.env.ENV ?? '').toString()}`);
+
     let output:DataAndStatus<any> = {data:{},status:200}
     let paShimUsStatesData:UsStateMapping|undefined;
 
