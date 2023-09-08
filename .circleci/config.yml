@@ -33,6 +33,7 @@ jobs:
             touch .env
             echo "GITHUB_API_TOKEN=$GITHUB_API_TOKEN" >> .env
             echo "ENV=Stg" >> .env
+            cat .env
       - run:
           name: Run IPC Health tests
           command: yarn run test:health
