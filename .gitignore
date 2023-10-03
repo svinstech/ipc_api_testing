@@ -4,3 +4,4 @@ node_modules
 .env
 collected_data
 yarn-error.log
+**/deleteme
