@@ -21,15 +21,11 @@ function compareData(value1:any, value2:any):DataDifference {
     const type1:string = value1IsArray ? "array" : typeof(value1)
     const type2:string = value2IsArray ? "array" : typeof(value2)
     if (type1 !== type2) {
-        // dataDifferenceObject.typeDiff = `Expected type: ${type1}. Actual type: ${type2}.`
         dataDifferenceObject.typeDiff = {expected: type1, actual: type2} as ComparisonObject
     }
 
     // Value comparison
     if (JSON.stringify(value1) != JSON.stringify(value2)) {
-        // value1 = Array.isArray(value1) ? `[${value1}]` : value1
-        // value2 = Array.isArray(value2) ? `[${value2}]` : value2
-        // dataDifferenceObject.valueDiff = `Expected value: ${value1}. Actual value: ${value2}.`
         dataDifferenceObject.valueDiff = {expected: value1, actual: value2} as ComparisonObject
     }
 
@@ -73,7 +69,12 @@ function compareObjectKeys(object1:object, object2:object, missingKeys:string[],
 }
 
 /*
+    Find all discrepancies between the WBP data and the local data.
 
+    wbpObjects is the "limits_raw" wbp data from the input file.
+    localObjects is the "limits_raw" local data from the input file.
+
+    The input file is generated with the getWbpData() function.
 */
 export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:object[]):WbpDifferenceObject[] {
     const wbpDifferences:WbpDifferenceObject[] = [] as WbpDifferenceObject[]
@@ -111,7 +112,10 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
 }
 
 /*
+    Get the WBP & local data that corresponds to the appID argument.
+    The appID is the applicatino ID for an application. Simple as.
 
+    Generates and populates the input file, which will be used for the data comparison.
 */
 export function getWbpData(appId:string):void {
     const url:string = `${CONSTANTS.WBP_DATA_BASE_URL}${appId}`
