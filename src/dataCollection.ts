@@ -76,14 +76,11 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
 /*
     Takes an API endpoint and returns the response data.
 */
-async function GetResponseData(_url:string) :Promise<DataAndStatus<any>> {
+export async function GetResponseData(_url:string) :Promise<DataAndStatus<any>> {
     let output:DataAndStatus<any> = {data:{},status:200};
 
     await axios(_url).then((_response:AxiosResponse<any, any>) => {
-        output = {
-            data : _response.data,
-            status : _response.status
-        }
+        output = _response
 
         if (!IsGoodResponse(_response.status)) {
             console.log(`! Bad response status: ${_response.status}`);
