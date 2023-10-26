@@ -47,6 +47,8 @@ jobs:
           command: yarn run test:productLines
       - slack-notifier/build-status-notification: 
           header: "Insurance Product Core Tests"
+          fail-text: "FAILURE :x:"
+          additional-text: "Branch: ${CIRCLE_BRANCH}\nBuild Number: ${CIRCLE_BUILD_NUM}\nJob URL: ${CIRCLE_BUILD_URL}"
           channel-webhook-environment-variables: WEBHOOK_KELLEN_KINCAID
 
 workflows:
