@@ -117,10 +117,10 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
 
     Generates and populates the input file, which will be used for the data comparison.
 */
-export function getWbpData(appId:string):void {
+export async function getWbpData(appId:string):Promise<void> {
     const url:string = `${CONSTANTS.WBP_DATA_BASE_URL}${appId}`
-
-    axios(url)
+    
+    await axios(url)
     .then((response:AxiosResponse<any, any>) => {
         // Check response status.
         const statusIsGood:boolean = IsGoodResponse(response.status)
