@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs'
-import { WorkbookProcessorData, WbpDifferenceObject } from './wbpTypes'
+import { WorkbookProcessorData, WbpAnalysisObject } from './wbpTypes'
 import { compareWbpDataToLocalData, getWbpData } from './wbpFunctions'
 import { CONSTANTS } from './wbpConstants'
 import path from 'path'
@@ -31,7 +31,7 @@ async function main() {
     // // // // // // // // // // // // // // // // // // // // // // //
 
     // Perform the data comparison.
-    const wbpDifferences:WbpDifferenceObject[] = compareWbpDataToLocalData(wbpObjects, localObjects)
+    const wbpDifferences:WbpAnalysisObject = compareWbpDataToLocalData(wbpObjects, localObjects)
 
     // Populate output file.
     writeFileSync(filePathOutput, JSON.stringify(wbpDifferences))

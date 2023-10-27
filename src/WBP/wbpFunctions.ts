@@ -1,4 +1,4 @@
-import { ComparisonObject, DataDifference, KeyValueDifferences, WbpDifferenceObject, KeyDifferenceTotalObject } from "./wbpTypes"
+import { ComparisonObject, DataDifference, KeyValueDifferences, WbpDifferenceObject, KeyDifferenceTotalObject, WbpAnalysisObject } from "./wbpTypes"
 import path from 'path'
 import axios from 'axios'
 import { AxiosResponse } from 'axios'
@@ -78,7 +78,7 @@ function compareObjectKeys(object1:object, object2:object, missingKeys:string[],
 
     The input file is generated with the getWbpData() function.
 */
-export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:object[]):WbpDifferenceObject[] {
+export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:object[]):WbpAnalysisObject {
     const wbpDifferences:WbpDifferenceObject[] = [] as WbpDifferenceObject[]
     const keyDifferenceTotals:KeyDifferenceTotalObject = {} as KeyDifferenceTotalObject
 
@@ -96,9 +96,9 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
         })
 
         //testing
-        console.log(`localObjectsThatMatchThePrimaryKey length: ${localObjectsThatMatchThePrimaryKey.length}`)
-        writeFileSync("deleteme.localObjectsThatMatchThePrimaryKey.json", JSON.stringify(localObjectsThatMatchThePrimaryKey))
-        throw "throwing for testing purposes"
+        // console.log(`localObjectsThatMatchThePrimaryKey length: ${localObjectsThatMatchThePrimaryKey.length}`)
+        // writeFileSync("deleteme.localObjectsThatMatchThePrimaryKey.json", JSON.stringify(localObjectsThatMatchThePrimaryKey))
+        // throw "throwing for testing purposes"
 
         let matchingLocalObject:any = localObjectsThatMatchThePrimaryKey[0]
 
@@ -157,7 +157,7 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
         }
     }
 
-    return wbpDifferences
+    return {keyDifferenceTotals, wbpDifferences} as WbpAnalysisObject
 }
 
 /*
