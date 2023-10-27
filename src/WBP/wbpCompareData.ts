@@ -9,14 +9,6 @@ async function main() {
     const appId:string = process.argv[2] // index 2 is the first command line argument.
     await getWbpData(appId)
 
-    /*
-        TODO - Make the comparison using the primary key below,
-            instead of comparing by array index.
-
-        --PRIMARY KEY--
-        Product Tag + Coverage Tag + Limit Key + State
-    */
-
     // Assemble file paths.
     const filePathInput:string = path.join(CONSTANTS.WBP_DIRECTORY, CONSTANTS.WBP_TEST_DATA_FILE)
     const filePathOutput:string = path.join(CONSTANTS.WBP_DIRECTORY, CONSTANTS.WBP_COMPARISON_OUTPUT_FILE)

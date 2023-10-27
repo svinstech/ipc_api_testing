@@ -30,3 +30,12 @@ export type WbpDifferenceObject = {
     extraKeys: string[],
     keyValueDifferences: KeyValueDifferences
 }
+
+export type KeyDifferenceTotalObject = {
+    [key in string]: number
+}
+
+export type WbpAnalysisObject = {
+    keyDifferenceTotals: KeyDifferenceTotalObject,
+    wbpDifferences: WbpDifferenceObject[]
+}

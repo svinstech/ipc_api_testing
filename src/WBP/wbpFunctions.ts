@@ -1,4 +1,4 @@
-import { ComparisonObject, DataDifference, KeyValueDifferences, WbpDifferenceObject } from "./wbpTypes"
+import { ComparisonObject, DataDifference, KeyValueDifferences, WbpDifferenceObject, KeyDifferenceTotalObject } from "./wbpTypes"
 import path from 'path'
 import axios from 'axios'
 import { AxiosResponse } from 'axios'
@@ -47,16 +47,18 @@ function compareObjectKeys(object1:object, object2:object, missingKeys:string[],
    
     objectKeys1.forEach((element) => {
         const keyIsShared:boolean = objectKeys2.includes(element)
-        if (!keyIsShared) {
+        const wbpKeysToIgnore:string[] = [] // These keys will NOT count as missing keys.
+        if (!keyIsShared && !wbpKeysToIgnore.includes(element)) {
             missingKeys.push(element)
-        } else {
+        } else if (keyIsShared) {
             matchingKeys.push(element)
         }
     })
     
     objectKeys2.forEach((element) => {
         const keyIsShared:boolean = objectKeys1.includes(element)
-        if (!keyIsShared) {
+        const localKeysToIgnore:string[] = ["UW selector"] // These keys will NOT count as extra keys.
+        if (!keyIsShared && !localKeysToIgnore.includes(element)) {
             extraKeys.push(element)
         }
     })
@@ -78,29 +80,76 @@ function compareObjectKeys(object1:object, object2:object, missingKeys:string[],
 */
 export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:object[]):WbpDifferenceObject[] {
     const wbpDifferences:WbpDifferenceObject[] = [] as WbpDifferenceObject[]
+    const keyDifferenceTotals:KeyDifferenceTotalObject = {} as KeyDifferenceTotalObject
 
     for (let i = 0; i < wbpObjects.length; i++) {
         const ithWbpObject:any = wbpObjects[i]
-        const ithLocalObject:any = localObjects[i]
+        const localObjectsThatMatchThePrimaryKey:any = localObjects.filter((localObject:any) => {
+            const matchingProductTag:boolean = localObject["Product Tag"] === ithWbpObject["Product Tag"]
+            const matchingCoverageTag:boolean = localObject["Coverage Tag"] === ithWbpObject["Coverage Tag"]
+            const matchingLimitKey:boolean = localObject["Limit Key"] === ithWbpObject["Limit Key"]
+            const matchingState:boolean = localObject["State"] === ithWbpObject["State"]
+
+            const matchingPrimaryKey:boolean = matchingProductTag && matchingCoverageTag && matchingLimitKey && matchingState
+
+            return matchingPrimaryKey
+        })
+
+        //testing
+        console.log(`localObjectsThatMatchThePrimaryKey length: ${localObjectsThatMatchThePrimaryKey.length}`)
+        writeFileSync("deleteme.localObjectsThatMatchThePrimaryKey.json", JSON.stringify(localObjectsThatMatchThePrimaryKey))
+        throw "throwing for testing purposes"
+
+        let matchingLocalObject:any = localObjectsThatMatchThePrimaryKey[0]
+
+        // If there is no match, represent the 'matching local object' as an emptyy object.
+        if (matchingLocalObject == undefined) {
+            matchingLocalObject = {}
+        }
+
         const keyValueDifferences:KeyValueDifferences = {} as KeyValueDifferences
     
         const missingKeys:string[] = []
         const extraKeys:string[] = []
         const matchingKeys:string[] = []
-        const keysMatch:boolean = compareObjectKeys(ithWbpObject, ithLocalObject, missingKeys, extraKeys, matchingKeys)
+        const keysMatch:boolean = compareObjectKeys(ithWbpObject, matchingLocalObject, missingKeys, extraKeys, matchingKeys)
     
         matchingKeys.forEach((matchingKey:string) => {
-            const dataDifference:DataDifference = compareData(ithWbpObject[matchingKey], ithLocalObject[matchingKey])
+            let localObjectMatchingValue:any
+            switch (matchingKey) {
+                case "Limit":
+                case "MIN":
+                case "MAX":
+                    localObjectMatchingValue = matchingLocalObject[matchingKey]/100 // The local object has these values in cents. Here we convert them to dollars, to match the wbp object.
+                    break
+                default:
+                    localObjectMatchingValue = matchingLocalObject[matchingKey]
+            }
+
+            const dataDifference:DataDifference = compareData(ithWbpObject[matchingKey], localObjectMatchingValue)
             const differencesDetected:boolean = Object.keys(dataDifference).length > 0
             if (differencesDetected) {
+                switch (matchingKey) {
+                    case "Limit":
+                    case "MIN":
+                    case "MAX":
+                        // Communicate that these are dollar amounts being compared.
+                        dataDifference.valueDiff.expected = CONSTANTS.DOLLAR_FORMATTER.format(dataDifference.valueDiff.expected)
+                        dataDifference.valueDiff.actual = CONSTANTS.DOLLAR_FORMATTER.format(dataDifference.valueDiff.actual)
+                        break
+                }
+
                 keyValueDifferences[matchingKey] = dataDifference
+                
+                keyDifferenceTotals[matchingKey] ??= 0 // Defaults the value to 0 if the key does not yet exist.
+                keyDifferenceTotals[matchingKey] += 1  // Increments the value.
             }
         })
     
         if (!keysMatch) {
             wbpDifferences.push({
                 wbpObject: ithWbpObject,
-                localObject: ithLocalObject,
+                localObject: matchingLocalObject,
                 missingKeys,
                 extraKeys,
                 keyValueDifferences
@@ -119,7 +168,7 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
 */
 export async function getWbpData(appId:string):Promise<void> {
     const url:string = `${CONSTANTS.WBP_DATA_BASE_URL}${appId}`
-    
+
     await axios(url)
     .then((response:AxiosResponse<any, any>) => {
         // Check response status.
