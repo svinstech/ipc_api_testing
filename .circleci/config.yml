@@ -48,18 +48,34 @@ jobs:
       - slack-notifier/build-status-notification: 
           header: "Insurance Product Core Tests"
           channel-webhook-environment-variables: WEBHOOK_KELLEN_KINCAID
+  json-comparison-tool-job:
+    docker:
+      - image: cimg/node:current
+    steps:
+      - checkout
+      - install-packages
+      - run:
+          name: Test the json comparison tool on Workbook Processor data
+          command: ts-node src/WBP/wbpCompareData.ts "3f28c18b-e9dc-4eba-811b-056b9ebb269e"
+      - store_artifacts:
+          path: wbp.testData.json
+      - store_artifacts:
+          path: wbp.comparison.json
 
-# workflows:
-#   ipc-tests-workflow:
-#     jobs:
-#       - ipc-tests
-#   schedule-workflow:
-#     triggers:
-#       - schedule:
-#           cron: "0 4 * * 3" # Every Wednesday at midnight EST (4am UTC)
-#           filters:
-#             branches:
-#               only:
-#                 - main
-#     jobs:
-      # - ipc-tests
+workflows:
+  # ipc-tests-workflow:
+  #   jobs:
+  #     - ipc-tests
+  json-comparison-tool-workflow:
+    jobs:
+      - json-comparison-tool-job
+  # schedule-workflow:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 4 * * 3" # Every Wednesday at midnight EST (4am UTC)
+  #         filters:
+  #           branches:
+  #             only:
+  #               - main
+  #   jobs:
+  #     - ipc-tests
