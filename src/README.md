@@ -2,7 +2,7 @@
 
 ###### Author: Kellen Kincaid, Senior SDET
 
-### RUNNING THE TESTS LOCALLY
+### RUNNING THE IPC TESTS LOCALLY
 Firstly, need to be on the VPN. Follow [these instructions](https://vouchinc.atlassian.net/wiki/spaces/devops/pages/2311979049/VPN+Access) if you need access.
 - If you're unable to download the VPN profile, you may need to [submit a Help Desk ticket](https://vouchinc.atlassian.net/servicedesk/customer/portal/1) to get permission. 
 
@@ -26,7 +26,7 @@ Otherwise, you can run tests for individual endpoints with one of these commands
 `yarn run test:jurisdictionVersions`
 `yarn run test:productLines`
 
-### RUNNING TESTS IN CIRCLECI
+### RUNNING IPC TESTS IN CIRCLECI
 - In the CircleCI config, ensure that the job running the tests has: `resource_class: svinstech/dev`
     - This will fill the same role as being on the VPN when it comes to endpoint access.
 - Ensure that you set the target environment to staging, as this is the only environment that `svinstech/dev` has access to.

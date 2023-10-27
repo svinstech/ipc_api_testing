@@ -8,5 +8,7 @@ export const CONSTANTS = {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 0,
-     })
+    }),
+    LOCAL_KEYS_TO_IGNORE: ["UW selector"], // <-- These keys will NOT count as extra keys.
+    WBP_KEYS_TO_IGNORE: [""], // <-- These keys will NOT count as missing keys.
 }

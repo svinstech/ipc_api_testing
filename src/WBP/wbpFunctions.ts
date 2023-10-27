@@ -47,8 +47,7 @@ function compareObjectKeys(object1:object, object2:object, missingKeys:string[],
    
     objectKeys1.forEach((element) => {
         const keyIsShared:boolean = objectKeys2.includes(element)
-        const wbpKeysToIgnore:string[] = [] // These keys will NOT count as missing keys.
-        if (!keyIsShared && !wbpKeysToIgnore.includes(element)) {
+        if (!keyIsShared && !CONSTANTS.WBP_KEYS_TO_IGNORE.includes(element)) {
             missingKeys.push(element)
         } else if (keyIsShared) {
             matchingKeys.push(element)
@@ -57,8 +56,7 @@ function compareObjectKeys(object1:object, object2:object, missingKeys:string[],
     
     objectKeys2.forEach((element) => {
         const keyIsShared:boolean = objectKeys1.includes(element)
-        const localKeysToIgnore:string[] = ["UW selector"] // These keys will NOT count as extra keys.
-        if (!keyIsShared && !localKeysToIgnore.includes(element)) {
+        if (!keyIsShared && !CONSTANTS.LOCAL_KEYS_TO_IGNORE.includes(element)) {
             extraKeys.push(element)
         }
     })
@@ -95,14 +93,9 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
             return matchingPrimaryKey
         })
 
-        //testing
-        // console.log(`localObjectsThatMatchThePrimaryKey length: ${localObjectsThatMatchThePrimaryKey.length}`)
-        // writeFileSync("deleteme.localObjectsThatMatchThePrimaryKey.json", JSON.stringify(localObjectsThatMatchThePrimaryKey))
-        // throw "throwing for testing purposes"
-
         let matchingLocalObject:any = localObjectsThatMatchThePrimaryKey[0]
 
-        // If there is no match, represent the 'matching local object' as an emptyy object.
+        // If there is no match, represent the 'matching local object' as an empty object.
         if (matchingLocalObject == undefined) {
             matchingLocalObject = {}
         }
@@ -120,7 +113,7 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
                 case "Limit":
                 case "MIN":
                 case "MAX":
-                    localObjectMatchingValue = matchingLocalObject[matchingKey]/100 // The local object has these values in cents. Here we convert them to dollars, to match the wbp object.
+                    localObjectMatchingValue = matchingLocalObject[matchingKey]/100 // The local object has these values in cents. Here we convert them to dollars to match the format of the wbp object.
                     break
                 default:
                     localObjectMatchingValue = matchingLocalObject[matchingKey]
@@ -133,20 +126,25 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
                     case "Limit":
                     case "MIN":
                     case "MAX":
-                        // Communicate that these are dollar amounts being compared.
+                        // Make if clear that these are dollar amounts being compared.
                         dataDifference.valueDiff.expected = CONSTANTS.DOLLAR_FORMATTER.format(dataDifference.valueDiff.expected)
                         dataDifference.valueDiff.actual = CONSTANTS.DOLLAR_FORMATTER.format(dataDifference.valueDiff.actual)
                         break
                 }
 
+                // Udpate keyValueDifferences
                 keyValueDifferences[matchingKey] = dataDifference
                 
+                // Update keyDifferenceTotals
                 keyDifferenceTotals[matchingKey] ??= 0 // Defaults the value to 0 if the key does not yet exist.
                 keyDifferenceTotals[matchingKey] += 1  // Increments the value.
             }
         })
     
-        if (!keysMatch) {
+        // Only include comparison data for keys that have a difference of values.
+        const notAllKeysMatch: boolean = !keysMatch
+        const notAllValuesMatch: boolean = Object.keys(keyValueDifferences).length > 0
+        if (notAllKeysMatch || notAllValuesMatch) {
             wbpDifferences.push({
                 wbpObject: ithWbpObject,
                 localObject: matchingLocalObject,

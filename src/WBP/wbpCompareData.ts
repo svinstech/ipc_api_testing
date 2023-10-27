@@ -5,7 +5,7 @@ import { CONSTANTS } from './wbpConstants'
 import path from 'path'
 
 async function main() {
-    // Sample app ID: "3f28c18b-e9dc-4eba-811b-056b9ebb269e"
+            // Sample app ID: "3f28c18b-e9dc-4eba-811b-056b9ebb269e"
     const appId:string = process.argv[2] // index 2 is the first command line argument.
     await getWbpData(appId)
 
@@ -14,7 +14,7 @@ async function main() {
     const filePathOutput:string = path.join(CONSTANTS.WBP_DIRECTORY, CONSTANTS.WBP_COMPARISON_OUTPUT_FILE)
 
     if (!existsSync(filePathInput)) {
-        throw(`Input file path doesn't not exist: ${filePathInput}`)
+        throw(`!!! Error: Input file path doesn't not exist: ${filePathInput}`)
     }
 
     // Read input data.
@@ -25,10 +25,13 @@ async function main() {
     const wbpObjects:object[] = inputDataObject.wbp.limits_raw
     const localObjects:object[] = inputDataObject.local.limits_raw
 
-    // // // // // // // // // // // // // // // // // // // // // // //
-    //                      TODO - Extra credit                       //
-    // Highlight discrepancies between these keys: "Available", "MIN" //
-    // // // // // // // // // // // // // // // // // // // // // // //
+    if (wbpObjects == undefined) {
+        throw("!!! Error: wbp limits_raw data is undefined.")
+    }
+
+    if (localObjects == undefined) {
+        throw("!!! Error: local limits_raw data is undefined.")
+    }
 
     // Perform the data comparison.
     const wbpDifferences:WbpAnalysisObject = compareWbpDataToLocalData(wbpObjects, localObjects)
