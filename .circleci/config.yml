@@ -31,8 +31,8 @@ jobs:
           name: Set up environment variable(s)
           command: |
             touch .env
-            echo "GITHUB_TOKEN=$GITHUB_TOKEN" > .env
-            echo "ENV=Stg" > .env
+            echo "GITHUB_API_TOKEN=$GITHUB_API_TOKEN" >> .env
+            echo "ENV=Stg" >> .env
       - run:
           name: Run IPC Health tests
           command: yarn run test:health
@@ -48,18 +48,30 @@ jobs:
       - slack-notifier/build-status-notification: 
           header: "Insurance Product Core Tests"
           channel-webhook-environment-variables: WEBHOOK_KELLEN_KINCAID
+  json-comparison-tool-job:
+    docker:
+      - image: cimg/node:current
+    steps:
+      - checkout
+      - install-packages
+      - run:
+          name: Placeholder job
+          command: ls
 
 workflows:
-  ipc-tests-workflow:
+  # ipc-tests-workflow:
+  #   jobs:
+  #     - ipc-tests
+  json-comparison-tool-workflow:
     jobs:
-      - ipc-tests
-  schedule-workflow:
-    triggers:
-      - schedule:
-          cron: "0 4 * * 3" # Every Wednesday at midnight EST (4am UTC)
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - ipc-tests
+      - json-comparison-tool-job
+  # schedule-workflow:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 4 * * 3" # Every Wednesday at midnight EST (4am UTC)
+  #         filters:
+  #           branches:
+  #             only:
+  #               - main
+  #   jobs:
+  #     - ipc-tests

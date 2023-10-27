@@ -24,12 +24,12 @@ export function IsGoodResponse(_responseCode:number) :boolean {
 export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :Promise<DataAndStatus<UsStateMapping>> {
     _fileNameWithoutExtension ??= "paShimUsStates"
 
-    const GITHUB_PERSONAL_ACCESS_TOKEN = process.env.GITHUB_TOKEN,
+    const GITHUB_PERSONAL_ACCESS_TOKEN = process.env.GITHUB_API_TOKEN,
           collectedDataDirectoryName = "collected_data",
           paShimUsStatesYamlFileName = `${collectedDataDirectoryName}/${_fileNameWithoutExtension}.yml`,
           paShimUsStatesJsonFileName = `${collectedDataDirectoryName}/${_fileNameWithoutExtension}.json`,
           yamlUrl = "https://api.github.com/repos/svinstech/pa_shim/git/blobs/3a81ca37fc0df296ea76e60807b5d6e4a9468b73" // Points to the config/us_states.yml in pa_shim.
-    
+
     let output:DataAndStatus<any> = {data:{},status:200}
     let paShimUsStatesData:UsStateMapping|undefined;
 
@@ -76,14 +76,11 @@ export async function GetPaShimUsStateData(_fileNameWithoutExtension?:string) :P
 /*
     Takes an API endpoint and returns the response data.
 */
-async function GetResponseData(_url:string) :Promise<DataAndStatus<any>> {
+export async function GetResponseData(_url:string) :Promise<DataAndStatus<any>> {
     let output:DataAndStatus<any> = {data:{},status:200};
 
     await axios(_url).then((_response:AxiosResponse<any, any>) => {
-        output = {
-            data : _response.data,
-            status : _response.status
-        }
+        output = _response
 
         if (!IsGoodResponse(_response.status)) {
             console.log(`! Bad response status: ${_response.status}`);

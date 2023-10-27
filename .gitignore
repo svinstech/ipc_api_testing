@@ -4,3 +4,6 @@ node_modules
 .env
 collected_data
 yarn-error.log
+**/deleteme*
+wbp.testData.json
+wbp.comparison.json
