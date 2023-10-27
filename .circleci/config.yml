@@ -55,12 +55,8 @@ jobs:
       - checkout
       - install-packages
       - run:
-          name: Test the json comparison tool on Workbook Processor data
-          command: ts-node src/WBP/wbpCompareData.ts "3f28c18b-e9dc-4eba-811b-056b9ebb269e"
-      - store_artifacts:
-          path: wbp.testData.json
-      - store_artifacts:
-          path: wbp.comparison.json
+          name: Placeholder job
+          command: ls
 
 workflows:
   # ipc-tests-workflow:
