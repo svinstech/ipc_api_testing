@@ -96,9 +96,9 @@ export function compareWbpDataToLocalData(wbpObjects:object[], localObjects:obje
         })
 
         //testing
-        console.log(`localObjectsThatMatchThePrimaryKey length: ${localObjectsThatMatchThePrimaryKey.length}`)
-        writeFileSync("deleteme.localObjectsThatMatchThePrimaryKey.json", JSON.stringify(localObjectsThatMatchThePrimaryKey))
-        throw "throwing for testing purposes"
+        // console.log(`localObjectsThatMatchThePrimaryKey length: ${localObjectsThatMatchThePrimaryKey.length}`)
+        // writeFileSync("deleteme.localObjectsThatMatchThePrimaryKey.json", JSON.stringify(localObjectsThatMatchThePrimaryKey))
+        // throw "throwing for testing purposes"
 
         let matchingLocalObject:any = localObjectsThatMatchThePrimaryKey[0]
 
